@@ -3,13 +3,16 @@ import Board from "./components/Board";
 import { createContext, useState } from "react";
 import { boardDefault } from "./Words";
 import './App.css';
+import { ListKata } from "./ListKata";
 
 export const AppContext = createContext();
 
 function App() {
-  const [board, setBoard] = useState(boardDefault)
+  const [board, setBoard] = useState(boardDefault);
+  // const [correctWord, setCorrectWord] = useState("");
   const [currAttempt, setCurrAttempt] = useState({ attempt: 0, letterPost: 0 })
 
+  const correctWord = 'MEMEK'
   // function that we will return to other components
   const onEnter = () => {
     if (currAttempt.letterPost !== 5) return;
@@ -47,6 +50,22 @@ function App() {
     setCurrAttempt({ ...currAttempt, letterPost: currAttempt.letterPost + 1 })
   }
 
+  // get random word from list kata
+  const getRandomWord = () => {
+    const index = Math.floor(Math.random) * ListKata.length;
+    const puzzle = ListKata[index].toUpperCase();
+    // setCorrectWord = puzzle
+    // console.log(correctWord)
+
+  }
+
+  const isWordValid = (word) => {
+    return (
+      ListKata.includes(word.toLowerCase())
+    )
+  }
+
+
   return (
     <>
       <div className="App">
@@ -55,7 +74,8 @@ function App() {
         </nav>
 
         <AppContext.Provider value={{
-          board, setBoard, currAttempt, setCurrAttempt, onDelete, onEnter, onSelectLetter
+          board, setBoard, currAttempt, setCurrAttempt, onDelete, onEnter, onSelectLetter,
+          getRandomWord, correctWord
         }}>
           <div className="game">
             <Board />
