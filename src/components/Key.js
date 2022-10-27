@@ -1,0 +1,42 @@
+import React, { useContext } from 'react'
+import { AppContext } from '../App'
+
+const Key = ({ keyVal, bigKey }) => {
+  const {
+    board,
+    setBoard,
+    currAttempt,
+    setCurrAttempt,
+    correctWord,
+    onSelectLetter,
+    onDelete,
+    onEnter,
+    setDisabledLetters,
+    disabledLetters,
+    gameOver, } = useContext(AppContext);
+
+  const selectLetter = () => {
+    if (keyVal === 'ENTER') {
+      onEnter();
+    } else if (keyVal === "DELETE") {
+      onDelete();
+    } else {
+      onSelectLetter(keyVal);
+      // keyboard value A-z
+    }
+  }
+
+  return (
+    <div
+      className="key"
+      id={bigKey && 'big'}
+      // id={bigKey ? "big" : disabled && "disabled"}
+      onClick={selectLetter}
+    >
+      {keyVal}
+    </div>
+
+  )
+}
+
+export default Key
