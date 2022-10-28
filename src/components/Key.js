@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { AppContext } from '../App'
 
-const Key = ({ keyVal, bigKey }) => {
+const Key = ({ keyVal, bigKey ,disabled}) => {
   const {
     board,
     setBoard,
@@ -29,8 +29,8 @@ const Key = ({ keyVal, bigKey }) => {
   return (
     <div
       className="key"
-      id={bigKey && 'big'}
-      // id={bigKey ? "big" : disabled && "disabled"}
+      // id={bigKey && 'big'}
+      id={bigKey ? "big" : disabled ? "disabled" : ""}
       onClick={selectLetter}
     >
       {keyVal}

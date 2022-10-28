@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { AppContext } from '../App'
 
 const Letter = ({ letterPost, attemptValue }) => {
-  const { board, currAttempt, correctWord } = useContext(AppContext);
+  const { board, currAttempt, correctWord, disabledLetters, setDisabledLetters } = useContext(AppContext);
   // word that were input inside of the cell
   const letter = board[attemptValue][letterPost];
 
@@ -13,10 +13,17 @@ const Letter = ({ letterPost, attemptValue }) => {
 
   // we see the class after he guess the word of the first row
   const letterClass = currAttempt.attempt > attemptValue && (correct ? "correct" : almost ? "almost" : "error")
-  
+
+  // check for the disabled keyboard not on the grid, if match show green or not
+  useEffect(() => {
+    if (letter !== "" && !correct && !almost) {
+      // the disabled letters before and the current letter have been pres
+      setDisabledLetters((prev) => [...prev, letter]);
+    }
+  }, [currAttempt.attempt])
 
   return (
-    <div className='letter' id={letterClass}>
+    <div className='letter' id={letterClass.toString()}>
       {letter}
     </div>
   )

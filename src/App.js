@@ -1,32 +1,72 @@
 import Keyboard from "./components/Keyboard";
 import Board from "./components/Board";
-import { createContext, useState } from "react";
-import { boardDefault } from "./Words";
+import { createContext, useEffect, useState } from "react";
+import { boardDefault, getRandomWord } from "./Words";
 import './App.css';
 import { ListKata } from "./ListKata";
+import GameOver from "./components/GameOver";
 
 export const AppContext = createContext();
 
 function App() {
   const [board, setBoard] = useState(boardDefault);
-  // const [correctWord, setCorrectWord] = useState("");
-  const [currAttempt, setCurrAttempt] = useState({ attempt: 0, letterPost: 0 })
+  const [correctWord, setCorrectWord] = useState("");
+  const [wordSet, setWordSet] = useState([]);
+  const [disabledLetters, setDisabledLetters] = useState([]);
+  const [currAttempt, setCurrAttempt] = useState({
+    attempt: 0,
+    letterPost: 0
+  });
+  const [gameOver, setGameOver] = useState({
+    gameOver: false,
+    guessedWord: false,
+  });
+  let { theWord, todaysWord } = getRandomWord()
 
-  const correctWord = 'MEMEK'
+  // const correctWord = 'MEMEK'
+
+  // get random word
+  useEffect(() => {
+    setWordSet(theWord);
+    setCorrectWord(todaysWord);
+    console.log(todaysWord);
+  }, [])
+
   // function that we will return to other components
   const onEnter = () => {
+    // bcuz we cant press enter before its reach the last letterpost
     if (currAttempt.letterPost !== 5) return;
 
+    // currword is the word in the row
     let currWord = "";
     for (let i = 0; i < 5; i++) {
       currWord += board[currAttempt.attempt][i];
     }
 
-    // bcuz we cant press enter before its reach the last letterpost
-    if (currAttempt.letterPost !== 5) return;
+    // only guess the existing words
+    if (wordSet.includes(currWord.toLowerCase())) {
+      setCurrAttempt({ attempt: currAttempt.attempt + 1, letter: 0 });
+      // console.log("ok")
+    } else {
+      alert("Word not found");
+      // console.log(wordSet)
+      // console.log(currWord)
+    }
+
+    // the game ended logic
+    if (currWord === correctWord) {
+      setGameOver({ gameOver: true, guessedWord: true });
+      return;
+    }
+
+    // if theres no attempt and theres no correct word
+    if (currAttempt.attempt === 5) {
+      setGameOver({ gameOver: true, guessedWord: false });
+      return;
+    }
+
     // move vertically bcuz after press enter we move to another row below
     setCurrAttempt({ attempt: currAttempt.attempt + 1, letterPost: 0 })
-
   }
 
   const onDelete = () => {
@@ -50,20 +90,11 @@ function App() {
     setCurrAttempt({ ...currAttempt, letterPost: currAttempt.letterPost + 1 })
   }
 
-  // get random word from list kata
-  const getRandomWord = () => {
-    const index = Math.floor(Math.random) * ListKata.length;
-    const puzzle = ListKata[index].toUpperCase();
-    // setCorrectWord = puzzle
-    // console.log(correctWord)
-
-  }
-
-  const isWordValid = (word) => {
-    return (
-      ListKata.includes(word.toLowerCase())
-    )
-  }
+  // const isWordValid = (word) => {
+  //   return (
+  //     ListKata.includes(word.toLowerCase())
+  //   )
+  // }
 
 
   return (
@@ -74,12 +105,12 @@ function App() {
         </nav>
 
         <AppContext.Provider value={{
-          board, setBoard, currAttempt, setCurrAttempt, onDelete, onEnter, onSelectLetter,
-          getRandomWord, correctWord
+          board, setBoard, currAttempt, setCurrAttempt, onDelete, onEnter, onSelectLetter, setDisabledLetters,
+          getRandomWord, correctWord, disabledLetters, gameOver, setGameOver,
         }}>
           <div className="game">
             <Board />
-            <Keyboard />
+            {gameOver.gameOver ? <GameOver /> : < Keyboard />}
           </div>
         </AppContext.Provider>
       </div>

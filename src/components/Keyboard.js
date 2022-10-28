@@ -65,7 +65,7 @@ const Keyboard = () => {
         {keyboard1.map((key) => {
           return (
             <Key keyVal={key} key={key}
-            // disabled={disabledLetters.includes(key)}
+            disabled={disabledLetters.includes(key)}
             />
           );
         })}
@@ -74,7 +74,7 @@ const Keyboard = () => {
         {keyboard2.map((key) => {
           return (
             <Key keyVal={key} key={key}
-            // disabled={disabledLetters.includes(key)}
+            disabled={disabledLetters.includes(key)}
             />
           );
         })}
@@ -84,7 +84,7 @@ const Keyboard = () => {
         {keyboard3.map((key) => {
           return (
             <Key keyVal={key} key={key}
-            // disabled={disabledLetters.includes(key)}
+            disabled={disabledLetters.includes(key)}
             />
           );
         })}
